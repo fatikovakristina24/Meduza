@@ -1,14 +1,204 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Медузий квест</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Игра — Медузы</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Russo+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <div>
+        <section class="start-screen checkerboard-bg game-section game-section--start is-active" id="start-section">
+          <!-- <div class="checker checker--top" aria-hidden="true"></div> -->
+           <div class="start-screen__inner">
+                      <div class="section-inner start-panel">
+            <div class="start-banner panel-card">
+              <div class="start-banner__rect start-banner__rect--outer" aria-hidden="true"></div>
+              <div class="start-banner__rect start-banner__rect--inner" aria-hidden="true"></div>
 
-  <link rel="stylesheet" href="./styles/style.css" />
-  <script src="./javascripts/scripts.js" defer></script>
-</head>
-<body>
-  <h1>Медузий квест</h1>
-</body>
+              <img class="start-banner__jelly start-banner__jelly--big jellyfish-float" src="assets/jellyfish-start-pink-idle.svg" alt="" />
+              <img class="start-banner__jelly start-banner__jelly--small jellyfish-float jellyfish-float--delay" src="assets/jellyfish-start-blue-idle.svg" alt="" />
+              <img class="start-banner__fish start-banner__fish--blue" src="assets/fish-start-blue.svg" alt="" />
+              <img class="start-banner__fish start-banner__fish--pink" src="assets/fish-start-pink.svg" alt="" />
+
+              <button class="start-button" id="startGameButton" type="button">
+                <svg class="ribbon-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <polygon class="ribbon-path" points="0,0 100,0 90,50 100,100 0,100 10,50" />
+        </svg>
+                <span class="start-text">Начать прохождение</span>
+                <img class="start-banner__star start-banner__star--left" src="assets/star.svg" alt="" />
+                <img class="start-banner__star start-banner__star--right" src="assets/star.svg" alt="" />
+              </button>
+            </div>
+          </div>
+           </div>
+          <!-- <div class="checker checker--bottom" aria-hidden="true"></div> -->
+        </section>
+
+        <section class="game-section is-locked" id="memory-section" data-block="memory">
+          <div class="section-inner memory-layout panel-card panel-card--flush">
+            <div class="memory-intro section-side">
+              <h2 class="section-title">ПАМЯТЬ МЕДУЗ</h2>
+              <ol class="rules-list">
+                <li>Запомни расположение медуз</li>
+                <li>Нажми на медуз в том же порядке</li>
+                <li>Всего три раунда</li>
+              </ol>
+              <div class="memory-meta">
+                <div>Раунд: <span id="memoryRound">1</span>/3</div>
+                <div id="memoryStatus">Нажми «Начать раунд»</div>
+              </div>
+              <div class="section-actions">
+                <button class="mini-button" id="memoryStartButton" type="button">Начать раунд</button>
+                <button class="mini-button mini-button--ghost" id="memoryRestartButton" type="button">Переиграть блок</button>
+              </div>
+            </div>
+
+            <div class="memory-grid-wrap">
+              <div class="memory-grid" id="memoryGrid" aria-label="Сетка медуз"></div>
+            </div>
+          </div>
+          <div class="checkerboard-bg checkerboard-bg__bottom" aria-hidden="true"></div>
+          <div class="section-lock">
+            <div class="section-lock__text">Откроется после старта игры</div>
+          </div>
+        </section>
+
+        <section class="game-section is-locked" id="clicker-section" data-block="clicker">
+          <div class="section-inner clicker-layout panel-card panel-card--flush">
+            <div class="clicker-stats section-side">
+              <div class="stat-bubble stat-bubble--time">
+                <span class="stat-bubble__label">Время</span>
+                <span class="stat-bubble__value" id="clickerTime">30</span>
+                <img class="stat-bubble__star stat-bubble__star--pink" src="assets/pink-star.svg" alt="" />
+              </div>
+              <div class="stat-bubble stat-bubble--score">
+                <span class="stat-bubble__label">Счёт</span>
+                <span class="stat-bubble__value" id="clickerScore">0</span>
+                <img class="stat-bubble__star stat-bubble__star--white" src="assets/star.svg" alt="" />
+              </div>
+            </div>
+
+            <div class="clicker-stage-wrap">
+              <div class="clicker-stage" id="clickerStage">
+                <img class="clicker-fish clicker-fish--top js-clicker-fish" src="assets/fish-blue.svg" alt="Декоративная рыба" />
+                <img class="clicker-fish clicker-fish--bottom js-clicker-fish" src="assets/fish-pink.svg" alt="Декоративная рыба" />
+                <button class="clicker-arena" id="clickerJelly" type="button" aria-label="Нажать на медузу">
+                  <span class="clicker-arena__halo"></span>
+                  <img class="clicker-arena__jelly" id="clickerJellyImage" src="assets/jellyfish-blue-idle.svg" alt="Медуза" />
+                  <span class="clicker-arena__danger" id="clickerDangerBurst"></span>
+                </button>
+              </div>
+            </div>
+
+            <div class="clicker-intro section-side section-side--right">
+              <h2 class="section-title">МЕДУЗИЙ КЛИКЕР</h2>
+              <ol class="rules-list">
+                <li>Нажми на медузу</li>
+                <li>Собери 20 очков за 30 секунд</li>
+                <li>Нельзя нажимать на злую медузу</li>
+              </ol>
+              <div class="memory-meta memory-meta--tight">
+                <div id="clickerStatus">Первый клик запускает таймер</div>
+              </div>
+              <div class="section-actions">
+                <button class="mini-button mini-button--ghost" id="clickerRestartButton" type="button">Переиграть блок</button>
+              </div>
+            </div>
+          </div>
+          <div class="checkerboard-bg checkerboard-bg__bottom" aria-hidden="true"></div>
+          <div class="section-lock">
+            <div class="section-lock__text">Откроется после прохождения блока «Память медуз»</div>
+          </div>
+        </section>
+
+        <section class="game-section is-locked" id="words-section" data-block="words">
+          <div class="section-inner words-layout panel-card panel-card--flush">
+            <header class="words-header">
+              <h2 class="section-title">НАЙДИ СЛОВО</h2>
+              <p class="words-subtitle">Медуза, океан, щупальца, вода, ожог</p>
+            </header>
+            <div class="words-controls">
+              <div class="words-found" id="wordsFound"></div>
+              <div class="section-actions section-actions--compact">
+                <button class="mini-button mini-button--ghost" id="wordsClearSelection" type="button">Сбросить выбор</button>
+                <button class="mini-button mini-button--ghost" id="wordsRestartButton" type="button">Новый пазл</button>
+              </div>
+            </div>
+            <div class="word-grid" id="wordGrid" aria-label="Поле поиска слов"></div>
+          </div>
+          <div class="section-lock">
+            <div class="section-lock__text">Откроется после прохождения блока «Медузий кликер»</div>
+          </div>
+        </section>
+
+        <section class="game-section is-locked" id="victory-section" data-block="victory">
+          <div class="section-inner victory-layout panel-card">
+            <img class="victory-decor victory-burst victory-burst--one" src="assets/star-winner.svg" alt="" />
+            <img class="victory-decor victory-burst victory-burst--two" src="assets/star-winner.svg" alt="" />
+            <img class="victory-decor victory-firework victory-firework--left" src="assets/fireworks.svg" alt="" />
+            <img class="victory-decor victory-firework victory-firework--right" src="assets/fireworks.svg" alt="" />
+            <img class="victory-decor victory-decor--jelly-top" src="assets/jellyfish-pink-idle.svg" alt="" />
+            <img class="victory-decor victory-decor--jelly-bottom" src="assets/jellyfish-blue-idle.svg" alt="" />
+            <img class="victory-decor victory-decor--fish-top" src="assets/fish-blue.svg" alt="" />
+            <img class="victory-decor victory-decor--fish-bottom" src="assets/fish-pink.svg" alt="" />
+            <div class="victory-banner" id="victoryBanner">
+              <div class="victory-banner__rect victory-banner__rect--outer" aria-hidden="true"></div>
+              <div class="victory-banner__rect victory-banner__rect--inner" aria-hidden="true"></div>
+              <div class="victory-banner__title">Победа!</div>
+            </div>
+          </div>
+          <div class="checkerboard-bg checkerboard-bg__bottom" aria-hidden="true"></div>
+          <div class="section-lock">
+            <div class="section-lock__text">Откроется после прохождения блока «Найди слово»</div>
+          </div>
+        </section>
+
+        <section class="game-section is-locked game-section--footer last-block" id="wishes-section" data-block="wishes">
+          <div class="section-inner wishes-layout">
+            <div class="wishes-copy">
+              <h2 class="section-title section-title--left">Лови пожелание напоследок!</h2>
+              <p class="wishes-subtitle">Лопни любой пузырь</p>
+            </div>
+
+            <div class="bubbles-field" id="bubblesField" aria-label="Пожелания в пузырях"></div>
+
+            <footer class="site-footer">
+              <div class="site-footer__text">
+                <p>Фатикова Кристина Б25Д310</p>
+                <p>Куратор Камила Рихтер</p>
+              </div>
+              <img class="site-footer__logo" src="assets/logo.png" alt="HSE Art and Design School" />
+            </footer>
+          </div>
+          <div class="section-lock">
+            <div class="section-lock__text">Откроется после победы</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div class="modal-backdrop" id="messageModal" hidden>
+      <div class="message-card">
+        <button class="message-card__close" id="messageModalClose" type="button" aria-label="Закрыть">×</button>
+        <h3 class="message-card__title" id="messageModalTitle"></h3>
+        <p class="message-card__text" id="messageModalText"></p>
+        <div class="message-card__actions">
+          <button class="mini-button" id="messageModalAction" type="button">Продолжить</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wish-stack" id="wishStack"></div>
+
+    <button class="replay-all" id="replayAllButton" type="button">Переиграть всю игру</button>
+
+    <script src="js/main.js"></script>
+  </body>
 </html>
+<!-- final version -->
